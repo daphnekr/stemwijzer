@@ -52,3 +52,15 @@ body {
     display: none;
     grid-row: 3;
 }
+#btneens{
+    background-color: lightgrey;
+}
+#btngeen{
+    background-color: lightgrey;
+}
+#btnoneens{
+    background-color: lightgrey;
+}
+#overslaan{
+    background-color: lightgrey;
+}
