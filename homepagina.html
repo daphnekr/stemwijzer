@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="css/style.css">
+        <script src="js/script.js"></script>
+        <title>StemWijzer</title>
+    </head>
+    <body>
+        <div class = "grid-container">
+            <div class= "grid-item item1">
+                <img src="images/logo.png" id="logo">
+                <h3>StemWijzer Tweede Kamer 2017 </h3>
+                <h3>Test uw politieke voorkeur aan de hand van 30 stellingen</h3>
+
+                <p>Bekijk de toegankelijke versie voor mensen met een visuele beperking</p>
+                <p>De StemWijzer maakt geen gebruik van cookies. Klik hier voor de volledige privacy statement</p>
+            </div>
+            <div class = "grid-item item2">
+                <button id="startbtn" onclick="Start()">Start</button>
+            </div>
+
+            <div class = "grid-item item3">
+                <h3 id = "title"></h3>
+            </div>
+            <div class = "grid-item item4">
+                <h3 id = "statement"></h3>
+            </div>
+            <div class = "grid-item item5">
+                <button id = "btneens" onclick="AddAnswer('pro')">Eens</button>
+                <button id = "btngeen" onclick="AddAnswer('none')">Geen van beide</button>
+                <button id = "btnoneens" onclick="AddAnswer('contra')">Oneens</button>
+                <button id = "overslaan" onclick="Skip()">Sla deze vraag over</button>
+            </div>
+        </div>
+
+    </body>
+    <script src="js/testdata.js"></script>
+    <script src="js/script.js"></script>
+    
+    
+</html>
