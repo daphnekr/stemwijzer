@@ -3,6 +3,7 @@ var item2 = document.getElementsByClassName("item2");
 var item3 = document.getElementsByClassName("item3");
 var item4 = document.getElementsByClassName("item4");
 var item5 = document.getElementsByClassName("item5");
+var item6 = document.getElementsByClassName("item6");
 var title = document.getElementById("title");
 var statement = document.getElementById("statement");
 var btnPro = document.getElementById("btneens").style;
@@ -41,7 +42,6 @@ function SetNextStatement(count)
       switch(answers[i].position)
       {
         case "pro":
-          console.log(btnPro);
           btnPro.backgroundColor = answers[i].clicked;
           btnContra.backgroundColor = "lightgrey";
           btnNone.backgroundColor = "lightgrey";
@@ -62,7 +62,8 @@ function SetNextStatement(count)
   }
   if (subjects[count] == undefined)
   {
-    GetResult(arrAnswer);
+    ChooseParties();
+    //GetResult(arrAnswer);
     return;
   }
   number = count+1;
@@ -93,9 +94,8 @@ function PushInArray(position)
 
 function AddAnswer(position)
 {
-  console.log(answers);
-  PushInArray(position);  
-  count++
+  PushInArray(position);
+  count++;
   SetNextStatement(count);
 }
 
@@ -105,17 +105,90 @@ function Skip()
   SetNextStatement(count);
 }
 
-function GetResult(finalArr)
-{
-  var partiesCount = arrAnswer.length;
-  console.log(partiesCount);
-}
 function GoBack()
 {
   count--;
-  console.log(count);
-  console.log(answers.length);
-
+  if (count == -1)
+  {
+    location.reload();
+  }
   SetNextStatement(count);
+}
+
+function ChooseParties()
+{
+  item3[0].style.display = "none";
+  item4[0].style.display = "none";
+  item5[0].style.display = "none";
+  item6[0].style.display = "block";
+  for (var x = 0; x < parties.length; x++)
+  {
+    var input = document.createElement("INPUT");
+    input.setAttribute("type", "checkbox");
+    input.setAttribute("value", parties[x].name);
+    var label = document.createElement("label"); 
+    label.innerHTML = parties[x].name;
+    item6[0].appendChild(input);
+    item6[0].appendChild(label);
+    item6[0].appendChild(document.createElement("br"));
+  }
+}
+
+function GetResult(finalArr)
+{
+  var partiesCount = finalArr.length;
+  console.log(finalArr);
+  finalArr.sort();
+  console.log(finalArr);
+  var current = null;
+  var cnt = 0;
+  var resultarr = [];
+  for (var i = 0; i < finalArr.length+1; i++) 
+  {
+    if (finalArr[i] != current)
+    {
+      if (cnt > 0) {        
+        resultarr.push({"party": current, "count": cnt});
+      }
+      current = finalArr[i];
+      cnt = 1;
+    } 
+    else 
+    {
+      cnt++;
+      resultarr.count = cnt;
+    }
+  }
+  console.log(resultarr);
+  ViewResult(resultarr, partiesCount);
+}
+
+function ViewResult(resultarr, partiesCount)
+{
+  item3[0].style.display = "none";
+  item4[0].style.display = "none";
+  item5[0].style.display = "none";
+  item6[0].style.display = "block";
+  for (var x = 0; x < resultarr.length; x++)
+  {
+    resultarr[x].count = resultarr[x].count / subjects.length * 100;
+  }
+  var sorted = resultarr.sort(Compare)
+  console.log(sorted);
+  for (var i = 0; i < resultarr.length; i++)
+  {
+    var para = document.createElement("p");
+    para.innerHTML = sorted[i].party + " ----- " + sorted[i].count.toFixed() + "%";
+    item6[0].appendChild(para);
+  }
+}
+function Compare( a, b ) {
+  if ( a.count < b.count ){
+    return 1;
+  }
+  if ( a.count > b.count ){
+    return -1;
+  }
+  return 0;
 }
 

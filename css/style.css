@@ -43,14 +43,20 @@ body {
     display: none;
     grid-row: 1;
     grid-column: 1 / span 3;
+    height: 50px;
 }
 .item4{
     display: none;
     grid-row: 2;
+    height: 70px;
 }
 .item5{
     display: none;
     grid-row: 3;
+    height: 50px;
+}
+.item6{
+    display: none;
 }
 #btneens{
     background-color: lightgrey;
