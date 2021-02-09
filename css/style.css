@@ -40,15 +40,15 @@ body {
 }
 
 .item3{
-    visibility: hidden;
+    display: none;
     grid-row: 1;
     grid-column: 1 / span 3;
 }
 .item4{
-    visibility: hidden;
+    display: none;
     grid-row: 2;
 }
 .item5{
-    visibility: hidden;
+    display: none;
     grid-row: 3;
 }

@@ -22,11 +22,11 @@ function Start()
 
 function SetHTMLKiesWijzer()
 {
-  item3[0].style.visibility = "visible";
+  item3[0].style.display = "block";
   title.innerHTML = number + ". " + subjects[count].title;
-  item4[0].style.visibility = "visible";
+  item4[0].style.display = "block";
   statement.innerHTML = subjects[count].statement;
-  item5[0].style.visibility = "visible";
+  item5[0].style.display = "block";
 }
 function SetNextStatement(count)
 {
@@ -66,6 +66,12 @@ function Skip()
 
 function GetResult(finalArr)
 {
-  console.log(finalArr);
+  var partiesCount = arrAnswer.length;
+  console.log(partiesCount);
+}
+function GoBack()
+{
+  count--;
+  SetNextStatement(count);
 }
 
