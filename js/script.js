@@ -15,12 +15,13 @@ var arrAnswer = [];
 var answers = [];
 const size = 15;
 
+// set new object at every party for the count
 for(i = 0; i < parties.length; i++)
 {
   parties[i].count = 0;
 }
 
-
+// start
 function Start()
 {
   for (var x = 0; x < item1.length; x++) 
@@ -32,6 +33,7 @@ function Start()
   SetHTMLKiesWijzer();
 }
 
+// set first statement
 function SetHTMLKiesWijzer()
 {
   item3[0].style.display = "block";
@@ -40,6 +42,7 @@ function SetHTMLKiesWijzer()
   statement.innerHTML = subjects[count].statement;
   item5[0].style.display = "block";
 }
+
 
 function SetNextStatement(count)
 {
@@ -66,6 +69,7 @@ function SetNextStatement(count)
         break;
     }
   }
+  // if last question, you can choose the parties you want to see the result from
   if (subjects[count] == undefined)
   {
     ChooseParties();
@@ -136,6 +140,8 @@ function ChooseParties()
 
   var form = document.getElementById("form");
   var selectBigParties = document.getElementById("selectBigParties");
+  var selectSecularParties = document.getElementById("selectSecularParties");
+  var clicked = true;
   
   for (var x = 0; x < parties.length; x++)
   {
@@ -148,26 +154,58 @@ function ChooseParties()
     form.appendChild(label);
     form.appendChild(document.createElement("br"));
   }
-  selectBigParties.addEventListener("click", function() {CheckBigParties(selectBigParties)});
+  selectBigParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = true)});
+  selectSecularParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = false)});
   form.appendChild(document.createElement("br"));
   var btn = document.getElementById("submitbtn");
   btn.addEventListener("click", function() {IsChecked(form, btn, selectBigParties)});
 }
-function CheckBigParties(selectBigParties)
+function CheckParties(selectBigParties, selectSecularParties, clicked)
 {
   var inputs = form.getElementsByTagName("input");
-  if (selectBigParties.checked)
+  // If the user wants the big parties check, check which parties are big and check it.
+  if (selectBigParties.checked && clicked)
   {
     for(var i = 0; i < parties.length; i++)
-    {
-      if (parties[i].size > size)
+    { 
+      if (parties[i].size >= size)
       {
         var partyName = parties[i].name;
         for (var x = 0; x < inputs.length; x++) 
         {
-          if (inputs[i].value == partyName)
+          if (inputs[x].value == parties[i].name)
           {
-            inputs[i].checked = true;
+            inputs[x].checked = true;
+            console.log(inputs[x].checked);
+            
+          }
+        }
+        
+      }
+    }
+    return;;
+  }
+  else
+  {
+    for (var i = 0; i < inputs.length; i++) 
+    {
+      inputs[i].checked = false;
+    }
+  }
+
+  // If the user wants seculare parties checked, check which party is secular and check it.
+  if (selectSecularParties.checked && !clicked)
+  {
+    for(var i = 0; i < parties.length; i++)
+    {
+      if (parties[i].secular == true)
+      {
+        var partyName = parties[i].name;
+        for (var x = 0; x < inputs.length; x++) 
+        {
+          if (inputs[x].value == partyName)
+          {
+            inputs[x].checked = true;
           }
         }
       }
@@ -180,6 +218,7 @@ function CheckBigParties(selectBigParties)
       inputs[i].checked = false;
     }
   }
+  return;
 }
 function IsChecked(form, btn, selectBigParties)
 {
