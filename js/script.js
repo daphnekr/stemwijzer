@@ -1,14 +1,17 @@
-var item1 = document.getElementsByClassName("item1");
-var item2 = document.getElementsByClassName("item2");
-var item3 = document.getElementsByClassName("item3");
-var item4 = document.getElementsByClassName("item4");
-var item5 = document.getElementsByClassName("item5");
-var item6 = document.getElementsByClassName("item6");
-var title = document.getElementById("title");
-var statement = document.getElementById("statement");
-var btnPro = document.getElementById("btneens").style;
-var btnContra = document.getElementById("btnoneens").style;
-var btnNone = document.getElementById("btngeen").style;
+const item1 = document.getElementsByClassName("item1");
+const item2 = document.getElementsByClassName("item2");
+const item3 = document.getElementsByClassName("item3");
+const item4 = document.getElementsByClassName("item4");
+const item5 = document.getElementsByClassName("item5");
+const item6 = document.getElementsByClassName("item6");
+const item7 = document.getElementsByClassName("item7");
+const title = document.getElementById("title");
+const statement = document.getElementById("statement");
+const btnPro = document.getElementById("btneens").style;
+const btnContra = document.getElementById("btnoneens").style;
+const btnNone = document.getElementById("btngeen").style;
+const questionWeight = document.getElementById("questionWeight");
+const br = document.createElement("br");
 var count = 0;
 var number = count+1;
 var arrAnswer = [];
@@ -41,6 +44,8 @@ function SetHTMLKiesWijzer()
   item4[0].style.display = "block";
   statement.innerHTML = subjects[count].statement;
   item5[0].style.display = "block";
+  item6[0].style.display = "block";
+  PartiesOpinions(count);
 }
 
 
@@ -69,15 +74,130 @@ function SetNextStatement(count)
         break;
     }
   }
-  // if last question, you can choose the parties you want to see the result from
+  // if it's the last question, you can choose the parties you want to see the result from
   if (subjects[count] == undefined)
   {
     ChooseParties();
     return;
   }
+  PartiesOpinions(count);
   number = count+1;
   title.innerHTML = number + ". " + subjects[count].title;
   statement.innerHTML = subjects[count].statement;
+}
+function PartiesOpinions(count)
+{
+  console.log(count)
+  var eensrow = document.getElementById("eensrow");
+  var oneensrow = document.getElementById("oneensrow");
+  var geenrow = document.getElementById("geenrow");
+  eensrow.innerHTML= "Eens";
+  eensrow.appendChild(document.createElement("hr"));
+  oneensrow.innerHTML= "Oneens";
+  oneensrow.appendChild(document.createElement("hr"));
+  geenrow.innerHTML= "Geen van beide";
+  geenrow.appendChild(document.createElement("hr"));
+  console.log(subjects[count].parties); 
+
+  for(i = 0; i < subjects[count].parties.length; i++)
+  {
+    if (subjects[count].parties[i].position == "pro")
+    {
+      var row = document.createElement("td");
+      var arrow = document.createElement("I");
+      var button = document.createElement("A");
+      var div = document.createElement("DIV");
+      var p = document.createElement("P");
+
+      row.className = "roweens";
+      row.innerHTML = subjects[count].parties[i].name;
+      eensrow.appendChild(row);
+
+      arrow.className = "fas fa-angle-down";
+      button.setAttribute("role", "button");
+      button.style.color = "black";
+      button.setAttribute("href", "#collapseid"+subjects[count].parties[i].name);
+      button.setAttribute("data-toggle", "collapse");
+      button.setAttribute("aria-controls", "collapseid"+subjects[count].parties[i].name);
+      button.setAttribute("aria-expanded", "false");
+      button.appendChild(arrow);
+      eensrow.appendChild(button);
+
+      div.className = "collapse";
+      div.id = "collapseid"+subjects[count].parties[i].name;
+      eensrow.appendChild(div);
+      
+      p.className = "card card-body";
+      p.innerHTML = subjects[count].parties[i].opinion;
+      div.appendChild(p);
+
+      eensrow.appendChild(document.createElement("br"));
+    }
+    if (subjects[count].parties[i].position == "contra")
+    {
+      var row = document.createElement("td");
+      var arrow = document.createElement("I");
+      var button = document.createElement("A");
+      var div = document.createElement("DIV");
+      var p = document.createElement("P");
+
+      row.className = "roweens";
+      row.innerHTML = subjects[count].parties[i].name;
+      oneensrow.appendChild(row);
+
+      arrow.className = "fas fa-angle-down";
+      button.setAttribute("role", "button");
+      button.style.color = "black";
+      button.setAttribute("href", "#collapseid"+subjects[count].parties[i].name);
+      button.setAttribute("data-toggle", "collapse");
+      button.setAttribute("aria-controls", "collapseid"+subjects[count].parties[i].name);
+      button.setAttribute("aria-expanded", "false");
+      button.appendChild(arrow);
+      oneensrow.appendChild(button);
+
+      div.className = "collapse";
+      div.id = "collapseid"+subjects[count].parties[i].name;
+      oneensrow.appendChild(div);
+      
+      p.className = "card card-body";
+      p.innerHTML = subjects[count].parties[i].opinion;
+      div.appendChild(p);
+
+      oneensrow.appendChild(document.createElement("br"));
+    }
+    if (subjects[count].parties[i].position == "none")
+    {
+      var row = document.createElement("td");
+      var arrow = document.createElement("I");
+      var button = document.createElement("A");
+      var div = document.createElement("DIV");
+      var p = document.createElement("P");
+
+      row.className = "roweens";
+      row.innerHTML = subjects[count].parties[i].name;
+      geenrow.appendChild(row);
+
+      arrow.className = "fas fa-angle-down";
+      button.setAttribute("role", "button");
+      button.style.color = "black";
+      button.setAttribute("href", "#collapseid"+subjects[count].parties[i].name);
+      button.setAttribute("data-toggle", "collapse");
+      button.setAttribute("aria-controls", "collapseid"+subjects[count].parties[i].name);
+      button.setAttribute("aria-expanded", "false");
+      button.appendChild(arrow);
+      geenrow.appendChild(button);
+
+      div.className = "collapse";
+      div.id = "collapseid"+subjects[count].parties[i].name;
+      geenrow.appendChild(div);
+      
+      p.className = "card card-body";
+      p.innerHTML = subjects[count].parties[i].opinion;
+      div.appendChild(p);
+
+      geenrow.appendChild(document.createElement("br"));
+    }
+  }
 }
 
 function PushInArray(position)
@@ -93,7 +213,12 @@ function PushInArray(position)
         if (subjects[count].parties[x].name == parties[i].name)
         {
           parties[i].count++;
+          if (questionWeight.checked)
+          {
+            parties[i].count++;
+          }
         }
+        
       }
     }
   }
@@ -105,7 +230,9 @@ function PushInArray(position)
       answers[i].position = position;
     }
   }
+  console.log(parties[1])
   if(!exists) answers.push({"count": count, "position": position, "clicked": "lightblue"});
+  questionWeight.checked = false;
 }
 
 function AddAnswer(position)
@@ -117,7 +244,7 @@ function AddAnswer(position)
 
 function Skip()
 {
-  count++
+  count++;
   SetNextStatement(count);
 }
 
@@ -126,7 +253,14 @@ function GoBack()
   count--;
   if (count == -1)
   {
-    location.reload();
+    if (confirm("Weet je zeker dat je terug wilt gaan?"))
+    {
+      location.reload();
+    }
+    else
+    {
+      count++;
+    }
   }
   SetNextStatement(count);
 }
@@ -136,7 +270,7 @@ function ChooseParties()
   item3[0].style.display = "none";
   item4[0].style.display = "none";
   item5[0].style.display = "none";
-  item6[0].style.display = "block";
+  item7[0].style.display = "block";
 
   var form = document.getElementById("form");
   var selectBigParties = document.getElementById("selectBigParties");
@@ -158,7 +292,7 @@ function ChooseParties()
   selectSecularParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = false)});
   form.appendChild(document.createElement("br"));
   var btn = document.getElementById("submitbtn");
-  btn.addEventListener("click", function() {IsChecked(form, btn, selectBigParties)});
+  btn.addEventListener("click", function() {IsChecked(form, btn, selectBigParties, selectSecularParties)});
 }
 function CheckParties(selectBigParties, selectSecularParties, clicked)
 {
@@ -220,7 +354,8 @@ function CheckParties(selectBigParties, selectSecularParties, clicked)
   }
   return;
 }
-function IsChecked(form, btn, selectBigParties)
+// puts the parties in an array the user want to see the result of
+function IsChecked(form, btn, selectBigParties, selectSecularParties)
 {
   var arr = [];
   var inputs = form.getElementsByTagName("input");
@@ -234,18 +369,22 @@ function IsChecked(form, btn, selectBigParties)
   form.style.display = "none";
   btn.style.display = "none";
   selectBigParties.style.display = "none";
+  selectSecularParties.style.display = "none";
   document.getElementById("lblSelectParties").style.display = "none";
+  document.getElementById("lblSecularParties").style.display = "none";
   ViewResult(arr)
 }
 
 function ViewResult(arr)
 {
+  // calculate percentage of parties with answers of user
   for (var x = 0; x < parties.length; x++)
   {
     parties[x].count = parties[x].count / subjects.length * 100;
   }
   var sorted = parties.sort(Compare);
 
+  // show result from the parties that are checked
   for (var i = 0; i < arr.length; i++)
   {
     for (var x = 0; x < sorted.length; x++)
@@ -254,12 +393,22 @@ function ViewResult(arr)
       {
         var para = document.createElement("p");
         para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
-        item6[0].appendChild(para);
+        item7[0].appendChild(para);
       }
     }
   }
+  // if none of the parties are checked, show all parties
+  if (arr.length == 0)
+  {
+    for (var x = 0; x < sorted.length; x++)
+    {
+      var para = document.createElement("p");
+      para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
+      item7[0].appendChild(para);
+    }
+  }
 }
-
+// sort array with the highest count
 function Compare(a, b) 
 {
   if ( a.count < b.count )

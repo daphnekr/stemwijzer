@@ -31,20 +31,46 @@
                 <button id = "btneens" onclick="AddAnswer('pro')">Eens</button>
                 <button id = "btngeen" onclick="AddAnswer('none')">Geen van beide</button>
                 <button id = "btnoneens" onclick="AddAnswer('contra')">Oneens</button>
-                <button id = "overslaan" onclick="Skip()">Sla deze vraag over</button>
+                <button id = "overslaan" onclick="Skip()">Sla deze vraag over</button> <br>
+                <input id = "questionWeight" type = "checkbox">
+                <label for = "questionWeight">Deze vraag zwaarder mee laten tellen</label>
             </div>
-            
             <div class = "grid-item item6">
+                <a id = "a" role = "button" href = "#partiesOpinions" data-toggle = "collapse" aria-constrols="partiesOpinions" aria-expanded = false><h3>Wat vinden de partijen?</h3></a>
+                <div class="container collapse"id = "partiesOpinions">
+                    <div class="row">
+                      <div class="col-sm" id = "eensrow">
+                        Eens
+                        <div id = "parties"></div>
+                        <hr>
+                      </div>
+                      <div class="col-sm" id = "oneensrow">
+                        Oneens
+                        <hr>
+                      </div>
+                      <div class="col-sm" id = "geenrow">
+                        Geen van beide
+                        <hr>
+                      </div>
+                    </div>
+                  </div>
+
+
+            </div>
+            <div class = "grid-item item7">
                 <form id = "form"></form>
                 <input type = "checkbox" id = "selectBigParties"></input><label for = "selectBigParties" id = "lblSelectParties">Selecteer de grote partijen</label> <br>
-                <input type = "checkbox" id = "selectSecularParties"></input><label for = "selectSecularParties" id = "selectSecularParties">Selecteer seculiere partijen</label> <br>
+                <input type = "checkbox" id = "selectSecularParties"></input><label for = "selectSecularParties" id = "lblSecularParties">Selecteer seculiere partijen</label> <br>
                 <button id = "submitbtn">Resultaat</button> <br>
             </div>
         </div>
 
     </body>
-    <script src="js/testdata.js"></script>
+    <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
     <script src="js/script.js"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     
     
 </html>

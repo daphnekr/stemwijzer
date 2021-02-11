@@ -2,6 +2,8 @@ body {
     background-image: url("../images/background.png");
     background-repeat: no-repeat;
     background-size: 100%;
+    background-attachment: fixed;
+    background-position: center;
   }
 .grid-container {
     position: relative;
@@ -18,6 +20,7 @@ body {
 }
 .grid-item{
     border: black;
+    margin: 10px;
 }
 
 .item1 {
@@ -56,6 +59,14 @@ body {
     height: 50px;
 }
 .item6{
+    display: none;
+    grid-row: 4;
+    background-color: lightgray;
+}
+#a{
+    color: black;
+}
+.item7{
     display: none;
 }
 #btneens{
