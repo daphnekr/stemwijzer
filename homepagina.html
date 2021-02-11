@@ -7,70 +7,93 @@
         <title>StemWijzer</title>
     </head>
     <body>
-        <div class = "grid-container">
-            <div class= "grid-item item1">
-                <img src="images/logo.png" id="logo">
-                <h3>StemWijzer Tweede Kamer 2017 </h3>
-                <h3>Test uw politieke voorkeur aan de hand van 30 stellingen</h3>
-
-                <p>Bekijk de toegankelijke versie voor mensen met een visuele beperking</p>
-                <p>De StemWijzer maakt geen gebruik van cookies. Klik hier voor de volledige privacy statement</p>
-            </div>
-            <div class = "grid-item item2">
-                <button id="startbtn" onclick="Start()">Start</button>
-            </div>
-
-            <div class = "grid-item item3">
-                <button onclick="GoBack()"><i class="fas fa-arrow-left"></i></button>
-                <h3 id = "title"></h3>
-            </div>
-            <div class = "grid-item item4">
-                <h3 id = "statement"></h3>
-            </div>
-            <div class = "grid-item item5">
-                <button id = "btneens" onclick="AddAnswer('pro')">Eens</button>
-                <button id = "btngeen" onclick="AddAnswer('none')">Geen van beide</button>
-                <button id = "btnoneens" onclick="AddAnswer('contra')">Oneens</button>
-                <button id = "overslaan" onclick="Skip()">Sla deze vraag over</button> <br>
-                <input id = "questionWeight" type = "checkbox">
-                <label for = "questionWeight">Deze vraag zwaarder mee laten tellen</label>
-            </div>
-            <div class = "grid-item item6">
-                <a id = "a" role = "button" href = "#partiesOpinions" data-toggle = "collapse" aria-constrols="partiesOpinions" aria-expanded = false><h3>Wat vinden de partijen?</h3></a>
-                <div class="container collapse"id = "partiesOpinions">
-                    <div class="row">
-                      <div class="col-sm" id = "eensrow">
-                        Eens
-                        <div id = "parties"></div>
-                        <hr>
-                      </div>
-                      <div class="col-sm" id = "oneensrow">
-                        Oneens
-                        <hr>
-                      </div>
-                      <div class="col-sm" id = "geenrow">
-                        Geen van beide
-                        <hr>
-                      </div>
+        <div class="container pt-5">
+            <div class="w-100 card m-3 p-3 item1">
+                    <h2 class="d-inline"><img src="images/logo.png" id="logo"></h2>
+                <div class="row">
+                    <div class = "col-sm ">
+                        <h3>StemWijzer Tweede Kamer 2017 </h3>
+                        <h3>Test uw politieke voorkeur aan de hand van 30 stellingen</h3>
+                        <p>Bekijk de toegankelijke versie voor mensen met een visuele beperking</p>
+                        <p>De StemWijzer maakt geen gebruik van cookies. Klik hier voor de volledige privacy statement</p>
                     </div>
-                  </div>
-
-
+                    <div class = "col-sm text-center">
+                        <button class ="btn btn-info btn-lg" style="width: 200px;" onclick="Start()">Start</button>
+                    </div>
+                </div>
             </div>
-            <div class = "grid-item item7">
-                <form id = "form"></form>
-                <input type = "checkbox" id = "selectBigParties"></input><label for = "selectBigParties" id = "lblSelectParties">Selecteer de grote partijen</label> <br>
-                <input type = "checkbox" id = "selectSecularParties"></input><label for = "selectSecularParties" id = "lblSecularParties">Selecteer seculiere partijen</label> <br>
-                <button id = "submitbtn">Resultaat</button> <br>
+
+            <div class="w-100 card m-3 p-3 d-none item2">
+                <div class="row text-left">
+                    <div class = "col-sm">
+                        <button class ="btn btn-secondary btn-lg" onclick="GoBack()"><i class="fas fa-arrow-left"></i></button>
+                    </div>
+                </div>
+                <div class = "row">
+                    <h3 id = "title"></h3>
+                </div>
+                <div class = "row">
+                    <h4 id = "statement"></h4>
+                </div>
+                <div class = "row">
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btneens" onclick="AddAnswer('pro')">Eens</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btngeen" onclick="AddAnswer('none')">Geen van beide</button>
+
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btnoneens" onclick="AddAnswer('contra')">Oneens</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "overslaan" onclick="Skip()">Sla deze vraag over</button>
+                </div>
+                <div class = "row mt-1">
+                    <input type="checkbox" class="form-check-input" id="questionWeight"> 
+                    <label class="form-check-label" for="questionWeight">Deze vraag zwaarder mee laten tellen</label>
+                </div>
+                <hr>
+                <div class = "row">
+                    <a class = "text-dark" role = "button" href = "#partiesOpinions" data-toggle = "collapse" aria-constrols="partiesOpinions" aria-expanded = false><h3>Wat vinden de partijen?</h3></a>
+                    <div class="container collapse"id = "partiesOpinions">
+                        <div class="row">
+                          <div class="col-sm" id = "eensrow">
+                            Eens
+                            <div id = "parties"></div>
+                            <hr>
+                          </div>
+                          <div class="col-sm" id = "oneensrow">
+                            Oneens
+                            <hr>
+                          </div>
+                          <div class="col-sm" id = "geenrow">
+                            Geen van beide
+                            <hr>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="w-100 card m-3 p-3 d-none item3">
+                <div class = "row">
+                    <div class = "col-sm">
+                        <form id = "form"></form>
+                    </div>
+                </div>
+                <div class = "row">
+                    <input type = "checkbox" id = "selectBigParties"></input><label id = "lblSelectParties">Selecteer de grote partijen</label> <br>
+                    <input type = "checkbox" id = "selectSecularParties"></input><label id = "lblSecularParties">Selecteer seculiere partijen</label> <br>
+                    <button class ="btn btn-info btn-lg m-1" style="width: 200px;" id = "submitbtn">Resultaat</button> <br>
+                </div>
+            </div>
+
+            <div class="w-100 card m-3 p-3 d-none item4">
+                <div class = "row">
+                    <h2>Resultaat</h2>
+                </div>
+                <div class = "row result">
+                </div>
             </div>
         </div>
-
+    </div>
     </body>
-    <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
+    <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script>
     <script src="js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    
-    
 </html>

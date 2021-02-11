@@ -1,17 +1,14 @@
 const item1 = document.getElementsByClassName("item1");
 const item2 = document.getElementsByClassName("item2");
-const item3 = document.getElementsByClassName("item3");
+const item3 = document.getElementsByClassName("item3")
 const item4 = document.getElementsByClassName("item4");
-const item5 = document.getElementsByClassName("item5");
-const item6 = document.getElementsByClassName("item6");
-const item7 = document.getElementsByClassName("item7");
 const title = document.getElementById("title");
 const statement = document.getElementById("statement");
 const btnPro = document.getElementById("btneens").style;
 const btnContra = document.getElementById("btnoneens").style;
 const btnNone = document.getElementById("btngeen").style;
 const questionWeight = document.getElementById("questionWeight");
-const br = document.createElement("br");
+const result = document.getElementsByClassName("result");
 var count = 0;
 var number = count+1;
 var arrAnswer = [];
@@ -30,7 +27,6 @@ function Start()
   for (var x = 0; x < item1.length; x++) 
   {
     item1[x].style.display = "none";
-    item2[x].style.display = "none";
   }
   count = 0;
   SetHTMLKiesWijzer();
@@ -39,12 +35,10 @@ function Start()
 // set first statement
 function SetHTMLKiesWijzer()
 {
-  item3[0].style.display = "block";
+  item2[0].classList.remove("d-none");
+  item2[0].classList.add("d-block");
   title.innerHTML = number + ". " + subjects[count].title;
-  item4[0].style.display = "block";
   statement.innerHTML = subjects[count].statement;
-  item5[0].style.display = "block";
-  item6[0].style.display = "block";
   PartiesOpinions(count);
 }
 
@@ -87,7 +81,6 @@ function SetNextStatement(count)
 }
 function PartiesOpinions(count)
 {
-  console.log(count)
   var eensrow = document.getElementById("eensrow");
   var oneensrow = document.getElementById("oneensrow");
   var geenrow = document.getElementById("geenrow");
@@ -97,7 +90,6 @@ function PartiesOpinions(count)
   oneensrow.appendChild(document.createElement("hr"));
   geenrow.innerHTML= "Geen van beide";
   geenrow.appendChild(document.createElement("hr"));
-  console.log(subjects[count].parties); 
 
   for(i = 0; i < subjects[count].parties.length; i++)
   {
@@ -127,7 +119,7 @@ function PartiesOpinions(count)
       div.id = "collapseid"+subjects[count].parties[i].name;
       eensrow.appendChild(div);
       
-      p.className = "card card-body";
+      p.className = "card card-body bg-light";
       p.innerHTML = subjects[count].parties[i].opinion;
       div.appendChild(p);
 
@@ -159,7 +151,7 @@ function PartiesOpinions(count)
       div.id = "collapseid"+subjects[count].parties[i].name;
       oneensrow.appendChild(div);
       
-      p.className = "card card-body";
+      p.className = "card card-body bg-light";
       p.innerHTML = subjects[count].parties[i].opinion;
       div.appendChild(p);
 
@@ -191,7 +183,7 @@ function PartiesOpinions(count)
       div.id = "collapseid"+subjects[count].parties[i].name;
       geenrow.appendChild(div);
       
-      p.className = "card card-body";
+      p.className = "card card-body bg-light";
       p.innerHTML = subjects[count].parties[i].opinion;
       div.appendChild(p);
 
@@ -230,7 +222,6 @@ function PushInArray(position)
       answers[i].position = position;
     }
   }
-  console.log(parties[1])
   if(!exists) answers.push({"count": count, "position": position, "clicked": "lightblue"});
   questionWeight.checked = false;
 }
@@ -267,10 +258,10 @@ function GoBack()
 
 function ChooseParties()
 {
-  item3[0].style.display = "none";
-  item4[0].style.display = "none";
-  item5[0].style.display = "none";
-  item7[0].style.display = "block";
+  item2[0].classList.add("d-none");
+  item2[0].classList.remove("d-block");
+  item3[0].classList.remove("d-none");
+  item3[0].classList.add("d-block");
 
   var form = document.getElementById("form");
   var selectBigParties = document.getElementById("selectBigParties");
@@ -279,6 +270,7 @@ function ChooseParties()
   
   for (var x = 0; x < parties.length; x++)
   {
+    console.log("werktt")
     var input = document.createElement("INPUT");
     input.type = "checkbox";
     input.value = parties[x].name;
@@ -288,13 +280,13 @@ function ChooseParties()
     form.appendChild(label);
     form.appendChild(document.createElement("br"));
   }
-  selectBigParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = true)});
-  selectSecularParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = false)});
+  selectBigParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = true, form)});
+  selectSecularParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = false, form)});
   form.appendChild(document.createElement("br"));
   var btn = document.getElementById("submitbtn");
-  btn.addEventListener("click", function() {IsChecked(form, btn, selectBigParties, selectSecularParties)});
+  btn.addEventListener("click", function() {IsChecked(form)});
 }
-function CheckParties(selectBigParties, selectSecularParties, clicked)
+function CheckParties(selectBigParties, selectSecularParties, clicked, form)
 {
   var inputs = form.getElementsByTagName("input");
   // If the user wants the big parties check, check which parties are big and check it.
@@ -309,9 +301,7 @@ function CheckParties(selectBigParties, selectSecularParties, clicked)
         {
           if (inputs[x].value == parties[i].name)
           {
-            inputs[x].checked = true;
-            console.log(inputs[x].checked);
-            
+            inputs[x].checked = true;            
           }
         }
         
@@ -355,7 +345,7 @@ function CheckParties(selectBigParties, selectSecularParties, clicked)
   return;
 }
 // puts the parties in an array the user want to see the result of
-function IsChecked(form, btn, selectBigParties, selectSecularParties)
+function IsChecked(form)
 {
   var arr = [];
   var inputs = form.getElementsByTagName("input");
@@ -366,24 +356,23 @@ function IsChecked(form, btn, selectBigParties, selectSecularParties)
         arr.push(parties[i].name);
     }
   }
-  form.style.display = "none";
-  btn.style.display = "none";
-  selectBigParties.style.display = "none";
-  selectSecularParties.style.display = "none";
-  document.getElementById("lblSelectParties").style.display = "none";
-  document.getElementById("lblSecularParties").style.display = "none";
+  item2[0].classList.add("d-none");
+  item2[0].classList.remove("d-block");
   ViewResult(arr)
 }
 
 function ViewResult(arr)
 {
+  item3[0].classList.add("d-none");
+  item3[0].classList.remove("d-block");
+  item4[0].classList.remove("d-none");
+  item4[0].classList.add("d-block");
   // calculate percentage of parties with answers of user
   for (var x = 0; x < parties.length; x++)
   {
     parties[x].count = parties[x].count / subjects.length * 100;
   }
   var sorted = parties.sort(Compare);
-
   // show result from the parties that are checked
   for (var i = 0; i < arr.length; i++)
   {
@@ -393,7 +382,7 @@ function ViewResult(arr)
       {
         var para = document.createElement("p");
         para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
-        item7[0].appendChild(para);
+        result[0].appendChild(para);
       }
     }
   }
@@ -404,7 +393,7 @@ function ViewResult(arr)
     {
       var para = document.createElement("p");
       para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
-      item7[0].appendChild(para);
+      result[0].appendChild(para);
     }
   }
 }

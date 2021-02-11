@@ -2,82 +2,16 @@ body {
     background-image: url("../images/background.png");
     background-repeat: no-repeat;
     background-size: 100%;
-    background-attachment: fixed;
-    background-position: center;
-  }
-.grid-container {
-    position: relative;
-    display: grid;
-    background: white;
-    width: 70%;
-    margin-left: auto;
-    margin-right: auto;
-    border: 4px black;
-    padding: 30px;
-}
-#logo {
-    width: 40%;
-}
-.grid-item{
-    border: black;
-    margin: 10px;
-}
-
-.item1 {
-    grid-column: 1 / span 2;
-    grid-row: 1;
-  }
-.item2 {
-    grid-column: 3;
-    grid-row: 1;
-}
-#startbtn{
-    border: none;
-    background-color: black;
-    color: white;
-    padding: 15px 50px;
-    text-align: center;
-    font-size: 25px;
-    border-radius: 4px;
-    position: absolute;
-}
-
-.item3{
-    display: none;
-    grid-row: 1;
-    grid-column: 1 / span 3;
-    height: 50px;
-}
-.item4{
-    display: none;
-    grid-row: 2;
-    height: 70px;
-}
-.item5{
-    display: none;
-    grid-row: 3;
-    height: 50px;
-}
-.item6{
-    display: none;
-    grid-row: 4;
-    background-color: lightgray;
-}
-#a{
-    color: black;
-}
-.item7{
-    display: none;
 }
 #btneens{
-    background-color: lightgrey;
-}
-#btngeen{
-    background-color: lightgrey;
+    background-color: lightgray;
 }
 #btnoneens{
-    background-color: lightgrey;
+    background-color: lightgray;
+}
+#btngeen{
+    background-color: lightgray;
 }
 #overslaan{
-    background-color: lightgrey;
+    background-color: lightgray;
 }
