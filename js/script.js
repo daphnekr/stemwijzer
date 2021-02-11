@@ -13,6 +13,7 @@ var count = 0;
 var number = count+1;
 var arrAnswer = [];
 var answers = [];
+const size = 15;
 
 for(i = 0; i < parties.length; i++)
 {
@@ -134,7 +135,8 @@ function ChooseParties()
   item6[0].style.display = "block";
 
   var form = document.getElementById("form");
-
+  var selectBigParties = document.getElementById("selectBigParties");
+  
   for (var x = 0; x < parties.length; x++)
   {
     var input = document.createElement("INPUT");
@@ -146,11 +148,40 @@ function ChooseParties()
     form.appendChild(label);
     form.appendChild(document.createElement("br"));
   }
+  selectBigParties.addEventListener("click", function() {CheckBigParties(selectBigParties)});
   form.appendChild(document.createElement("br"));
-   var btn = document.getElementById("submitbtn");
-   btn.addEventListener("click", function() {IsChecked(arrAnswer, form, btn)});
+  var btn = document.getElementById("submitbtn");
+  btn.addEventListener("click", function() {IsChecked(form, btn, selectBigParties)});
 }
-function IsChecked(arrAnswer, form, btn)
+function CheckBigParties(selectBigParties)
+{
+  var inputs = form.getElementsByTagName("input");
+  if (selectBigParties.checked)
+  {
+    for(var i = 0; i < parties.length; i++)
+    {
+      if (parties[i].size > size)
+      {
+        var partyName = parties[i].name;
+        for (var x = 0; x < inputs.length; x++) 
+        {
+          if (inputs[i].value == partyName)
+          {
+            inputs[i].checked = true;
+          }
+        }
+      }
+    }
+  }
+  else
+  {
+    for (var i = 0; i < inputs.length; i++) 
+    {
+      inputs[i].checked = false;
+    }
+  }
+}
+function IsChecked(form, btn, selectBigParties)
 {
   var arr = [];
   var inputs = form.getElementsByTagName("input");
@@ -163,34 +194,9 @@ function IsChecked(arrAnswer, form, btn)
   }
   form.style.display = "none";
   btn.style.display = "none";
+  selectBigParties.style.display = "none";
+  document.getElementById("lblSelectParties").style.display = "none";
   ViewResult(arr)
-}
-
-function GetResult(arr)
-{
-  console.log(arr);
-  arrAnswer.sort();
-  console.log(arrAnswer);
-  var current = null;
-  var cnt = 0;
-  var resultarr = [];
-  for (var i = 0; i < arrAnswer.length+1; i++) 
-  {
-    if (arrAnswer[i] != current)
-    {
-      if (cnt > 0) {        
-        resultarr.push({"party": current, "count": cnt});
-      }
-      current = arrAnswer[i];
-      cnt = 1;
-    } 
-    else 
-    {
-      cnt++;
-      resultarr.count = cnt;
-    }
-  }
-  ViewResult(resultarr, arr);
 }
 
 function ViewResult(arr)
