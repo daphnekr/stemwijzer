@@ -14,6 +14,11 @@ var number = count+1;
 var arrAnswer = [];
 var answers = [];
 
+for(i = 0; i < parties.length; i++)
+{
+  parties[i].count = 0;
+}
+
 
 function Start()
 {
@@ -63,7 +68,6 @@ function SetNextStatement(count)
   if (subjects[count] == undefined)
   {
     ChooseParties();
-    //GetResult(arrAnswer);
     return;
   }
   number = count+1;
@@ -79,6 +83,13 @@ function PushInArray(position)
     if (subjects[count].parties[x].position == position)
     {
       arrAnswer.push(subjects[count].parties[x].name);
+      for(i = 0; i < parties.length; i++)
+      {
+        if (subjects[count].parties[x].name == parties[i].name)
+        {
+          parties[i].count++;
+        }
+      }
     }
   }
   for (var i = 0; i < answers.length; i++)
@@ -121,36 +132,56 @@ function ChooseParties()
   item4[0].style.display = "none";
   item5[0].style.display = "none";
   item6[0].style.display = "block";
+
+  var form = document.getElementById("form");
+
   for (var x = 0; x < parties.length; x++)
   {
     var input = document.createElement("INPUT");
-    input.setAttribute("type", "checkbox");
-    input.setAttribute("value", parties[x].name);
+    input.type = "checkbox";
+    input.value = parties[x].name;
     var label = document.createElement("label"); 
     label.innerHTML = parties[x].name;
-    item6[0].appendChild(input);
-    item6[0].appendChild(label);
-    item6[0].appendChild(document.createElement("br"));
+    form.appendChild(input);
+    form.appendChild(label);
+    form.appendChild(document.createElement("br"));
   }
+  form.appendChild(document.createElement("br"));
+   var btn = document.getElementById("submitbtn");
+   btn.addEventListener("click", function() {IsChecked(arrAnswer, form, btn)});
+}
+function IsChecked(arrAnswer, form, btn)
+{
+  var arr = [];
+  var inputs = form.getElementsByTagName("input");
+  for (var i = 0; i < inputs.length; i++) 
+  {
+    if (inputs[i].type === "checkbox" && inputs[i].checked) 
+    {
+        arr.push(parties[i].name);
+    }
+  }
+  form.style.display = "none";
+  btn.style.display = "none";
+  ViewResult(arr)
 }
 
-function GetResult(finalArr)
+function GetResult(arr)
 {
-  var partiesCount = finalArr.length;
-  console.log(finalArr);
-  finalArr.sort();
-  console.log(finalArr);
+  console.log(arr);
+  arrAnswer.sort();
+  console.log(arrAnswer);
   var current = null;
   var cnt = 0;
   var resultarr = [];
-  for (var i = 0; i < finalArr.length+1; i++) 
+  for (var i = 0; i < arrAnswer.length+1; i++) 
   {
-    if (finalArr[i] != current)
+    if (arrAnswer[i] != current)
     {
       if (cnt > 0) {        
         resultarr.push({"party": current, "count": cnt});
       }
-      current = finalArr[i];
+      current = arrAnswer[i];
       cnt = 1;
     } 
     else 
@@ -159,34 +190,39 @@ function GetResult(finalArr)
       resultarr.count = cnt;
     }
   }
-  console.log(resultarr);
-  ViewResult(resultarr, partiesCount);
+  ViewResult(resultarr, arr);
 }
 
-function ViewResult(resultarr, partiesCount)
+function ViewResult(arr)
 {
-  item3[0].style.display = "none";
-  item4[0].style.display = "none";
-  item5[0].style.display = "none";
-  item6[0].style.display = "block";
-  for (var x = 0; x < resultarr.length; x++)
+  for (var x = 0; x < parties.length; x++)
   {
-    resultarr[x].count = resultarr[x].count / subjects.length * 100;
+    parties[x].count = parties[x].count / subjects.length * 100;
   }
-  var sorted = resultarr.sort(Compare)
-  console.log(sorted);
-  for (var i = 0; i < resultarr.length; i++)
+  var sorted = parties.sort(Compare);
+
+  for (var i = 0; i < arr.length; i++)
   {
-    var para = document.createElement("p");
-    para.innerHTML = sorted[i].party + " ----- " + sorted[i].count.toFixed() + "%";
-    item6[0].appendChild(para);
+    for (var x = 0; x < sorted.length; x++)
+    {
+      if (sorted[x].name == arr[i])
+      {
+        var para = document.createElement("p");
+        para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
+        item6[0].appendChild(para);
+      }
+    }
   }
 }
-function Compare( a, b ) {
-  if ( a.count < b.count ){
+
+function Compare(a, b) 
+{
+  if ( a.count < b.count )
+  {
     return 1;
   }
-  if ( a.count > b.count ){
+  if ( a.count > b.count )
+  {
     return -1;
   }
   return 0;
