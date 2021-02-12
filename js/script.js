@@ -14,16 +14,23 @@ var number = count+1;
 var arrAnswer = [];
 var answers = [];
 const size = 15;
+var subjectsLenght = subjects.length;
 
 // set new object at every party for the count
-for(i = 0; i < parties.length; i++)
+for(var i = 0; i < parties.length; i++)
 {
   parties[i].count = 0;
+}
+for(var i = 0; i < subjects.length; i++)
+{
+  subjects[i].userOpionion = "";
+  subjects[i].weight = 0;
 }
 
 // start
 function Start()
 {
+  
   for (var x = 0; x < item1.length; x++) 
   {
     item1[x].style.display = "none";
@@ -31,8 +38,9 @@ function Start()
   count = 0;
   SetHTMLKiesWijzer();
 }
-
-// set first statement
+/**
+ * sets first statement
+ */
 function SetHTMLKiesWijzer()
 {
   item2[0].classList.remove("d-none");
@@ -42,7 +50,10 @@ function SetHTMLKiesWijzer()
   PartiesOpinions(count);
 }
 
-
+/**
+ * sets nexts statement and if the user goes back the button of the previous statement is blue
+ * @param count 
+ */
 function SetNextStatement(count)
 {
   for(var i = 0; i < answers.length; i++) {
@@ -79,6 +90,10 @@ function SetNextStatement(count)
   title.innerHTML = number + ". " + subjects[count].title;
   statement.innerHTML = subjects[count].statement;
 }
+/**
+ * add all the parties with their opinion of the current statement
+ * @param count 
+ */
 function PartiesOpinions(count)
 {
   var eensrow = document.getElementById("eensrow");
@@ -192,9 +207,27 @@ function PartiesOpinions(count)
   }
 }
 
+/**
+ * pushes the answers from the user in an array
+ * @param {string} position 
+ */
 function PushInArray(position)
 {
   var exists = false;
+  subjects[count].userOpionion = position;
+
+  if (subjects[count].weight == 0 && questionWeight.checked)
+  {
+    subjects[count].weight++;
+    subjectsLenght++;
+  }
+  else if (subjects[count].weight == 1 && questionWeight.checked == false)
+  {
+    subjects[count].weight--;
+    subjectsLenght++;
+  }
+
+  console.log(subjects)
   for (var x = 0; x < subjects[count].parties.length; x++)
   {
     if (subjects[count].parties[x].position == position)
@@ -224,21 +257,22 @@ function PushInArray(position)
   }
   if(!exists) answers.push({"count": count, "position": position, "clicked": "lightblue"});
   questionWeight.checked = false;
-}
-
-function AddAnswer(position)
-{
-  PushInArray(position);
   count++;
   SetNextStatement(count);
 }
 
+
+/**
+ * function to skip the question
+ */
 function Skip()
 {
   count++;
   SetNextStatement(count);
 }
-
+/**
+ * function for the go back button
+ */
 function GoBack()
 {
   count--;
@@ -256,6 +290,9 @@ function GoBack()
   SetNextStatement(count);
 }
 
+/**
+ * shows all the parties and checkboxes the user can check to determine which party they want with the results
+ */
 function ChooseParties()
 {
   item2[0].classList.add("d-none");
@@ -270,7 +307,6 @@ function ChooseParties()
   
   for (var x = 0; x < parties.length; x++)
   {
-    console.log("werktt")
     var input = document.createElement("INPUT");
     input.type = "checkbox";
     input.value = parties[x].name;
@@ -344,7 +380,11 @@ function CheckParties(selectBigParties, selectSecularParties, clicked, form)
   }
   return;
 }
-// puts the parties in an array the user want to see the result of
+
+/**
+ * push the parties in an array the user want to see the result of
+ * @param {*} form 
+ */
 function IsChecked(form)
 {
   var arr = [];
@@ -358,30 +398,86 @@ function IsChecked(form)
   }
   item2[0].classList.add("d-none");
   item2[0].classList.remove("d-block");
-  ViewResult(arr)
+  // ViewResult(arr);
+  CalculateResult(arr);
 }
 
-function ViewResult(arr)
+function CalculateResult(arr)
 {
+  var resultArray = [];
+  var countArray = [];
+  var current = null;
+  var cnt = 0;
+  for(var i = 0; i < subjects.length; i++)
+  {
+    for(var x = 0; x < parties.length; x++)
+    {
+      if (subjects[i].userOpionion == subjects[i].parties[x].position)
+      {
+        resultArray.push(subjects[i].parties[x].name);
+        if (subjects[i].weight == 1)
+        {
+          resultArray.push(subjects[i].parties[x].name);
+        }
+      }
+    }
+  }
+  console.log("result");
+  console.log(resultArray);
+  resultArray.sort(Compare);
+  for (var i = 0; i < resultArray.length; i++)
+  {
+    if (resultArray[i] != current)
+    {
+      if (cnt > 0)
+      {
+        countArray.push({"party": current, "count": cnt});
+      }
+      current = resultArray[i];
+      cnt = 1;
+    }
+    else
+    {
+      cnt++;
+      countArray.count = cnt;
+    }
+  }
+  if (cnt > 0)
+  {
+    countArray.push({"party": current, "count": cnt});
+  }
+  ViewResult(countArray, arr);
+}
+
+/**
+ * Calculates and shows result on screen
+ * @param arr array with checked parties
+ */
+function ViewResult(resultArray, arr)
+{
+  console.log(resultArray);
   item3[0].classList.add("d-none");
   item3[0].classList.remove("d-block");
   item4[0].classList.remove("d-none");
   item4[0].classList.add("d-block");
+
+  
   // calculate percentage of parties with answers of user
-  for (var x = 0; x < parties.length; x++)
+  for (var x = 0; x < resultArray.length; x++)
   {
-    parties[x].count = parties[x].count / subjects.length * 100;
+    resultArray[x].count = resultArray[x].count / subjectsLenght * 100;
+    console.log(resultArray[x]);
   }
-  var sorted = parties.sort(Compare);
+  var sorted = resultArray.sort(Compare1);
   // show result from the parties that are checked
   for (var i = 0; i < arr.length; i++)
   {
     for (var x = 0; x < sorted.length; x++)
     {
-      if (sorted[x].name == arr[i])
+      if (sorted[x].party == arr[i])
       {
         var para = document.createElement("p");
-        para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
+        para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
         result[0].appendChild(para);
       }
     }
@@ -392,13 +488,34 @@ function ViewResult(arr)
     for (var x = 0; x < sorted.length; x++)
     {
       var para = document.createElement("p");
-      para.innerHTML = sorted[x].name + " ----- " + sorted[x].count.toFixed() + "%";
+      para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
       result[0].appendChild(para);
     }
   }
 }
-// sort array with the highest count
+/**
+ * sort array with on alphabetical order
+ * @param {*} a 
+ * @param {*} b 
+ */
 function Compare(a, b) 
+{
+  if ( a < b )
+  {
+    return -1;
+  }
+  if ( a > b )
+  {
+    return 1;
+  }
+  return 0;
+}
+/**
+ * sort array on count
+ * @param {*} a 
+ * @param {*} b 
+ */
+function Compare1(a, b) 
 {
   if ( a.count < b.count )
   {

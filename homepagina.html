@@ -13,7 +13,7 @@
                 <div class="row">
                     <div class = "col-sm ">
                         <h3>StemWijzer Tweede Kamer 2017 </h3>
-                        <h3>Test uw politieke voorkeur aan de hand van 30 stellingen</h3>
+                        <h4 class = "text-info">Test uw politieke voorkeur aan de hand van 30 stellingen</h4>
                         <p>Bekijk de toegankelijke versie voor mensen met een visuele beperking</p>
                         <p>De StemWijzer maakt geen gebruik van cookies. Klik hier voor de volledige privacy statement</p>
                     </div>
@@ -36,10 +36,10 @@
                     <h4 id = "statement"></h4>
                 </div>
                 <div class = "row">
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btneens" onclick="AddAnswer('pro')">Eens</button>
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btngeen" onclick="AddAnswer('none')">Geen van beide</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btneens" onclick="PushInArray('pro')">Eens</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btngeen" onclick="PushInArray('none')">Geen van beide</button>
 
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btnoneens" onclick="AddAnswer('contra')">Oneens</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btnoneens" onclick="PushInArray('contra')">Oneens</button>
                     <button class ="btn btn-lg m-1" style="width: 200px;" id = "overslaan" onclick="Skip()">Sla deze vraag over</button>
                 </div>
                 <div class = "row mt-1">
@@ -71,6 +71,7 @@
             <div class="w-100 card m-3 p-3 d-none item3">
                 <div class = "row">
                     <div class = "col-sm">
+                        <h3>Welke partijen wilt u meenemen in het resultaat?</h3>
                         <form id = "form"></form>
                     </div>
                 </div>
