@@ -9,6 +9,9 @@ const btnContra = document.getElementById("btnoneens").style;
 const btnNone = document.getElementById("btngeen").style;
 const questionWeight = document.getElementById("questionWeight");
 const result = document.getElementsByClassName("result");
+const form = document.getElementById("form");
+const selectBigParties = document.getElementById("selectBigParties");
+const selectSecularParties = document.getElementById("selectSecularParties");
 var count = 0;
 var number = count+1;
 var arrAnswer = [];
@@ -17,22 +20,17 @@ const size = 15;
 var subjectsLenght = subjects.length;
 
 // set new object at every party for the count
-for(var i = 0; i < parties.length; i++)
-{
+for(var i = 0; i < parties.length; i++) {
   parties[i].count = 0;
 }
-for(var i = 0; i < subjects.length; i++)
-{
+for(var i = 0; i < subjects.length; i++) {
   subjects[i].userOpionion = "";
   subjects[i].weight = 0;
 }
 
 // start
-function Start()
-{
-  
-  for (var x = 0; x < item1.length; x++) 
-  {
+function Start() {
+  for (var x = 0; x < item1.length; x++) {
     item1[x].style.display = "none";
   }
   count = 0;
@@ -41,8 +39,7 @@ function Start()
 /**
  * sets first statement
  */
-function SetHTMLKiesWijzer()
-{
+function SetHTMLKiesWijzer() {
   item2[0].classList.remove("d-none");
   item2[0].classList.add("d-block");
   title.innerHTML = number + ". " + subjects[count].title;
@@ -54,12 +51,10 @@ function SetHTMLKiesWijzer()
  * sets nexts statement and if the user goes back the button of the previous statement is blue
  * @param count 
  */
-function SetNextStatement(count)
-{
+function SetNextStatement(count) {
   for(var i = 0; i < answers.length; i++) {
     if (answers[i].count == count) {
-      switch(answers[i].position)
-      {
+      switch(answers[i].position) {
         case "pro":
           btnPro.backgroundColor = answers[i].clicked;
           btnContra.backgroundColor = "lightgrey";
@@ -78,10 +73,14 @@ function SetNextStatement(count)
       }
         break;
     }
+    else{
+      btnPro.backgroundColor = "lightgrey";
+      btnContra.backgroundColor = "lightgrey";
+      btnNone.backgroundColor = "lightgrey";
+    }
   }
   // if it's the last question, you can choose the parties you want to see the result from
-  if (subjects[count] == undefined)
-  {
+  if (subjects[count] == undefined) {
     ChooseParties();
     return;
   }
@@ -90,12 +89,266 @@ function SetNextStatement(count)
   title.innerHTML = number + ". " + subjects[count].title;
   statement.innerHTML = subjects[count].statement;
 }
+
+
+/**
+ * pushes the answers from the user in an array
+ * @param {string} position 
+ */
+function PushInArray(position) {
+  var exists = false;
+  subjects[count].userOpionion = position;
+
+  if (subjects[count].weight == 0 && questionWeight.checked) {
+    subjects[count].weight++;
+    subjectsLenght++;
+  }
+  else if (subjects[count].weight == 1 && questionWeight.checked == false) {
+    subjects[count].weight--;
+    subjectsLenght++;
+  }
+
+  for (var x = 0; x < subjects[count].parties.length; x++) {
+    if (subjects[count].parties[x].position == position) {
+      arrAnswer.push(subjects[count].parties[x].name);
+
+      for(i = 0; i < parties.length; i++) {
+        if (subjects[count].parties[x].name == parties[i].name) {
+          parties[i].count++;
+          if (questionWeight.checked) {
+            parties[i].count++;
+          }
+        }
+      }
+    }
+  }
+  for (var i = 0; i < answers.length; i++) {
+    if (answers[i].count == count) {
+      exists = true;
+      answers[i].position = position;
+    }
+  }
+  if(!exists) answers.push({"count": count, "position": position, "clicked": "lightblue"});
+  questionWeight.checked = false;
+  count++;
+  SetNextStatement(count);
+}
+/**
+ * function to skip the question
+ */
+function Skip() {
+  count++;
+  SetNextStatement(count);
+}
+/**
+ * function for the go back button
+ */
+function GoBack() {
+  count--;
+  if (count == -1) {
+    if (confirm("Weet je zeker dat je terug wilt gaan?")) {
+      location.reload();
+    } else {
+      count++;
+    }
+  }
+  SetNextStatement(count);
+}
+
+/**
+ * shows all the parties and checkboxes the user can check to determine which party they want with the results
+ */
+function ChooseParties() {
+  item2[0].classList.add("d-none");
+  item2[0].classList.remove("d-block");
+  item3[0].classList.remove("d-none");
+  item3[0].classList.add("d-block");
+
+  var clicked = true;
+  
+  for (var x = 0; x < parties.length; x++) {
+    var input = document.createElement("INPUT");
+    input.type = "checkbox";
+    input.value = parties[x].name;
+    var label = document.createElement("label"); 
+    label.innerHTML = parties[x].name;
+    form.appendChild(input);
+    form.appendChild(label);
+    form.appendChild(document.createElement("br"));
+  }
+  selectBigParties.addEventListener("click", function() {CheckParties(clicked = true)});
+  selectSecularParties.addEventListener("click", function() {CheckParties(clicked = false)});
+  form.appendChild(document.createElement("br"));
+  var btn = document.getElementById("submitbtn");
+  btn.addEventListener("click", function() {IsChecked(form)});
+}
+
+/**
+ * function checks which checkboxes the user want to check and checks the checkboxes
+ * @param {*} clicked 
+ * @param {*} form 
+ */
+function CheckParties(clicked) {
+  var inputs = form.getElementsByTagName("input");
+  // If the user wants the big parties check, check which parties are big and check the checkbox.
+  if (selectBigParties.checked && clicked) {
+    for(var i = 0; i < parties.length; i++) {
+      if (parties[i].size >= size) {
+        var partyName = parties[i].name;
+        for (var x = 0; x < inputs.length; x++) {
+          if (inputs[x].value == parties[i].name)          {
+            inputs[x].checked = true;            
+          }
+        }
+      }
+    }
+    return;
+  } else {
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].checked = false;
+    }
+  }
+
+  // If the user wants seculare parties checked, check which party is secular and check the checkbox.
+  if (selectSecularParties.checked && !clicked) {
+    for(var i = 0; i < parties.length; i++) {
+      if (parties[i].secular == true) {
+        var partyName = parties[i].name;
+        for (var x = 0; x < inputs.length; x++) {
+          if (inputs[x].value == partyName) {
+            inputs[x].checked = true;
+          }
+        }
+      }
+    }
+  } else {
+    for (var i = 0; i < inputs.length; i++) {
+      inputs[i].checked = false;
+    }
+  }
+  return;
+}
+
+/**
+ * push the parties in an array the user want to see the result of
+ * @param {*} form 
+ */
+function IsChecked(form) {
+  var arr = [];
+  var inputs = form.getElementsByTagName("input");
+  for (var i = 0; i < inputs.length; i++) {
+    if (inputs[i].type === "checkbox" && inputs[i].checked) {
+        arr.push(parties[i].name);
+    }
+  }
+  item2[0].classList.add("d-none");
+  item2[0].classList.remove("d-block");
+  // ViewResult(arr);
+  CalculateResult(arr);
+}
+
+function CalculateResult(arr) {
+  var resultArray = [];
+  var countArray = [];
+  var current = null;
+  var cnt = 0;
+  for(var i = 0; i < subjects.length; i++) {
+    for(var x = 0; x < subjects[i].parties.length; x++) {
+      if (subjects[i].userOpionion == subjects[i].parties[x].position) {
+        resultArray.push(subjects[i].parties[x].name);
+        if (subjects[i].weight == 1) {
+          resultArray.push(subjects[i].parties[x].name);
+        }
+      }
+    }
+  }
+  resultArray.sort(Compare);
+  for (var i = 0; i < resultArray.length; i++) {
+    if (resultArray[i] != current) {
+      if (cnt > 0) {
+        countArray.push({"party": current, "count": cnt});
+      }
+      current = resultArray[i];
+      cnt = 1;
+    } else {
+      cnt++;
+      countArray.count = cnt;
+    }
+  }
+  if (cnt > 0) {
+    countArray.push({"party": current, "count": cnt});
+  }
+  ViewResult(countArray, arr);
+}
+
+/**
+ * Calculates and shows result on screen
+ * @param arr array with checked parties
+ */
+function ViewResult(resultArray, arr) {
+  item3[0].classList.add("d-none");
+  item3[0].classList.remove("d-block");
+  item4[0].classList.remove("d-none");
+  item4[0].classList.add("d-block");
+
+  
+  // calculate percentage of parties with answers of user
+  for (var x = 0; x < resultArray.length; x++) {
+    resultArray[x].count = resultArray[x].count / subjectsLenght * 100;
+  }
+  var sorted = resultArray.sort(Compare1);
+  // show result from the parties that are checked
+  for (var i = 0; i < arr.length; i++) {
+    for (var x = 0; x < sorted.length; x++) {
+      if (sorted[x].party == arr[i]) {
+        var para = document.createElement("p");
+        para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
+        result[0].appendChild(para);
+      }
+    }
+  }
+  // if none of the parties are checked, show all parties
+  if (arr.length == 0) {
+    for (var x = 0; x < sorted.length; x++) {
+      var para = document.createElement("p");
+      para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
+      result[0].appendChild(para);
+    }
+  }
+}
+/**
+ * sort array with on alphabetical order
+ * @param {*} a 
+ * @param {*} b 
+ */
+function Compare(a, b) {
+  if ( a < b ) {
+    return -1;
+  }
+  if ( a > b ) {
+    return 1;
+  }
+  return 0;
+}
+/**
+ * sort array on count
+ * @param {*} a 
+ * @param {*} b 
+ */
+function Compare1(a, b) {
+  if ( a.count < b.count ) {
+    return 1;
+  }
+  if ( a.count > b.count ) {
+    return -1;
+  }
+  return 0;
+}
 /**
  * add all the parties with their opinion of the current statement
  * @param count 
  */
-function PartiesOpinions(count)
-{
+function PartiesOpinions(count) {
   var eensrow = document.getElementById("eensrow");
   var oneensrow = document.getElementById("oneensrow");
   var geenrow = document.getElementById("geenrow");
@@ -106,10 +359,8 @@ function PartiesOpinions(count)
   geenrow.innerHTML= "Geen van beide";
   geenrow.appendChild(document.createElement("hr"));
 
-  for(i = 0; i < subjects[count].parties.length; i++)
-  {
-    if (subjects[count].parties[i].position == "pro")
-    {
+  for(i = 0; i < subjects[count].parties.length; i++) {
+    if (subjects[count].parties[i].position == "pro") {
       var row = document.createElement("td");
       var arrow = document.createElement("I");
       var button = document.createElement("A");
@@ -140,8 +391,7 @@ function PartiesOpinions(count)
 
       eensrow.appendChild(document.createElement("br"));
     }
-    if (subjects[count].parties[i].position == "contra")
-    {
+    if (subjects[count].parties[i].position == "contra") {
       var row = document.createElement("td");
       var arrow = document.createElement("I");
       var button = document.createElement("A");
@@ -172,8 +422,7 @@ function PartiesOpinions(count)
 
       oneensrow.appendChild(document.createElement("br"));
     }
-    if (subjects[count].parties[i].position == "none")
-    {
+    if (subjects[count].parties[i].position == "none") {
       var row = document.createElement("td");
       var arrow = document.createElement("I");
       var button = document.createElement("A");
@@ -206,325 +455,3 @@ function PartiesOpinions(count)
     }
   }
 }
-
-/**
- * pushes the answers from the user in an array
- * @param {string} position 
- */
-function PushInArray(position)
-{
-  var exists = false;
-  subjects[count].userOpionion = position;
-
-  if (subjects[count].weight == 0 && questionWeight.checked)
-  {
-    subjects[count].weight++;
-    subjectsLenght++;
-  }
-  else if (subjects[count].weight == 1 && questionWeight.checked == false)
-  {
-    subjects[count].weight--;
-    subjectsLenght++;
-  }
-
-  console.log(subjects)
-  for (var x = 0; x < subjects[count].parties.length; x++)
-  {
-    if (subjects[count].parties[x].position == position)
-    {
-      arrAnswer.push(subjects[count].parties[x].name);
-      for(i = 0; i < parties.length; i++)
-      {
-        if (subjects[count].parties[x].name == parties[i].name)
-        {
-          parties[i].count++;
-          if (questionWeight.checked)
-          {
-            parties[i].count++;
-          }
-        }
-        
-      }
-    }
-  }
-  for (var i = 0; i < answers.length; i++)
-  {
-    if (answers[i].count == count)
-    {
-      exists = true;
-      answers[i].position = position;
-    }
-  }
-  if(!exists) answers.push({"count": count, "position": position, "clicked": "lightblue"});
-  questionWeight.checked = false;
-  count++;
-  SetNextStatement(count);
-}
-
-
-/**
- * function to skip the question
- */
-function Skip()
-{
-  count++;
-  SetNextStatement(count);
-}
-/**
- * function for the go back button
- */
-function GoBack()
-{
-  count--;
-  if (count == -1)
-  {
-    if (confirm("Weet je zeker dat je terug wilt gaan?"))
-    {
-      location.reload();
-    }
-    else
-    {
-      count++;
-    }
-  }
-  SetNextStatement(count);
-}
-
-/**
- * shows all the parties and checkboxes the user can check to determine which party they want with the results
- */
-function ChooseParties()
-{
-  item2[0].classList.add("d-none");
-  item2[0].classList.remove("d-block");
-  item3[0].classList.remove("d-none");
-  item3[0].classList.add("d-block");
-
-  var form = document.getElementById("form");
-  var selectBigParties = document.getElementById("selectBigParties");
-  var selectSecularParties = document.getElementById("selectSecularParties");
-  var clicked = true;
-  
-  for (var x = 0; x < parties.length; x++)
-  {
-    var input = document.createElement("INPUT");
-    input.type = "checkbox";
-    input.value = parties[x].name;
-    var label = document.createElement("label"); 
-    label.innerHTML = parties[x].name;
-    form.appendChild(input);
-    form.appendChild(label);
-    form.appendChild(document.createElement("br"));
-  }
-  selectBigParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = true, form)});
-  selectSecularParties.addEventListener("click", function() {CheckParties(selectBigParties, selectSecularParties, clicked = false, form)});
-  form.appendChild(document.createElement("br"));
-  var btn = document.getElementById("submitbtn");
-  btn.addEventListener("click", function() {IsChecked(form)});
-}
-function CheckParties(selectBigParties, selectSecularParties, clicked, form)
-{
-  var inputs = form.getElementsByTagName("input");
-  // If the user wants the big parties check, check which parties are big and check it.
-  if (selectBigParties.checked && clicked)
-  {
-    for(var i = 0; i < parties.length; i++)
-    { 
-      if (parties[i].size >= size)
-      {
-        var partyName = parties[i].name;
-        for (var x = 0; x < inputs.length; x++) 
-        {
-          if (inputs[x].value == parties[i].name)
-          {
-            inputs[x].checked = true;            
-          }
-        }
-        
-      }
-    }
-    return;;
-  }
-  else
-  {
-    for (var i = 0; i < inputs.length; i++) 
-    {
-      inputs[i].checked = false;
-    }
-  }
-
-  // If the user wants seculare parties checked, check which party is secular and check it.
-  if (selectSecularParties.checked && !clicked)
-  {
-    for(var i = 0; i < parties.length; i++)
-    {
-      if (parties[i].secular == true)
-      {
-        var partyName = parties[i].name;
-        for (var x = 0; x < inputs.length; x++) 
-        {
-          if (inputs[x].value == partyName)
-          {
-            inputs[x].checked = true;
-          }
-        }
-      }
-    }
-  }
-  else
-  {
-    for (var i = 0; i < inputs.length; i++) 
-    {
-      inputs[i].checked = false;
-    }
-  }
-  return;
-}
-
-/**
- * push the parties in an array the user want to see the result of
- * @param {*} form 
- */
-function IsChecked(form)
-{
-  var arr = [];
-  var inputs = form.getElementsByTagName("input");
-  for (var i = 0; i < inputs.length; i++) 
-  {
-    if (inputs[i].type === "checkbox" && inputs[i].checked) 
-    {
-        arr.push(parties[i].name);
-    }
-  }
-  item2[0].classList.add("d-none");
-  item2[0].classList.remove("d-block");
-  // ViewResult(arr);
-  CalculateResult(arr);
-}
-
-function CalculateResult(arr)
-{
-  var resultArray = [];
-  var countArray = [];
-  var current = null;
-  var cnt = 0;
-  for(var i = 0; i < subjects.length; i++)
-  {
-    for(var x = 0; x < parties.length; x++)
-    {
-      if (subjects[i].userOpionion == subjects[i].parties[x].position)
-      {
-        resultArray.push(subjects[i].parties[x].name);
-        if (subjects[i].weight == 1)
-        {
-          resultArray.push(subjects[i].parties[x].name);
-        }
-      }
-    }
-  }
-  console.log("result");
-  console.log(resultArray);
-  resultArray.sort(Compare);
-  for (var i = 0; i < resultArray.length; i++)
-  {
-    if (resultArray[i] != current)
-    {
-      if (cnt > 0)
-      {
-        countArray.push({"party": current, "count": cnt});
-      }
-      current = resultArray[i];
-      cnt = 1;
-    }
-    else
-    {
-      cnt++;
-      countArray.count = cnt;
-    }
-  }
-  if (cnt > 0)
-  {
-    countArray.push({"party": current, "count": cnt});
-  }
-  ViewResult(countArray, arr);
-}
-
-/**
- * Calculates and shows result on screen
- * @param arr array with checked parties
- */
-function ViewResult(resultArray, arr)
-{
-  console.log(resultArray);
-  item3[0].classList.add("d-none");
-  item3[0].classList.remove("d-block");
-  item4[0].classList.remove("d-none");
-  item4[0].classList.add("d-block");
-
-  
-  // calculate percentage of parties with answers of user
-  for (var x = 0; x < resultArray.length; x++)
-  {
-    resultArray[x].count = resultArray[x].count / subjectsLenght * 100;
-    console.log(resultArray[x]);
-  }
-  var sorted = resultArray.sort(Compare1);
-  // show result from the parties that are checked
-  for (var i = 0; i < arr.length; i++)
-  {
-    for (var x = 0; x < sorted.length; x++)
-    {
-      if (sorted[x].party == arr[i])
-      {
-        var para = document.createElement("p");
-        para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
-        result[0].appendChild(para);
-      }
-    }
-  }
-  // if none of the parties are checked, show all parties
-  if (arr.length == 0)
-  {
-    for (var x = 0; x < sorted.length; x++)
-    {
-      var para = document.createElement("p");
-      para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
-      result[0].appendChild(para);
-    }
-  }
-}
-/**
- * sort array with on alphabetical order
- * @param {*} a 
- * @param {*} b 
- */
-function Compare(a, b) 
-{
-  if ( a < b )
-  {
-    return -1;
-  }
-  if ( a > b )
-  {
-    return 1;
-  }
-  return 0;
-}
-/**
- * sort array on count
- * @param {*} a 
- * @param {*} b 
- */
-function Compare1(a, b) 
-{
-  if ( a.count < b.count )
-  {
-    return 1;
-  }
-  if ( a.count > b.count )
-  {
-    return -1;
-  }
-  return 0;
-}
-
