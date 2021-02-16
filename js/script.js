@@ -317,7 +317,7 @@ function ViewResult(resultArray, arr) {
   }
 }
 /**
- * sort array with on alphabetical order
+ * sort array on alphabetical order
  * @param {*} a 
  * @param {*} b 
  */
