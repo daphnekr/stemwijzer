@@ -64,7 +64,7 @@ function setNextStatement(count) {
   statement.innerHTML = subjects[count].statement;
 }
 
-function goBackQuestion(count){
+function goBackStatement(count){
   //removes 1 count from the count from the parties from that subject
   for (var i = 0; i < subjects[count].parties.length; i++){
     for(var j = 0; j < answers.length; j++) {
@@ -175,8 +175,7 @@ function goBack() {
       count++;
     }
   }
-  goBackQuestion(count);
- 
+  goBackStatement(count);
 }
 
 /**
