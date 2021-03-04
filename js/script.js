@@ -14,44 +14,71 @@ const selectBigParties = document.getElementById("selectBigParties");
 const selectSecularParties = document.getElementById("selectSecularParties");
 var count = 0;
 var number = count+1;
-var arrAnswer = [];
 var answers = [];
 const size = 15;
 var subjectsLenght = subjects.length;
+document.getElementById("btnsetkieswijzer").addEventListener("click", setHTMLKiesWijzer);
+document.getElementById("btngoback").addEventListener("click", goBack);
+document.getElementById("btneens").addEventListener("click", function(){ pushAnwerUserInArray("pro"); } );
+document.getElementById("btnoneens").addEventListener("click", function(){ pushAnwerUserInArray("contra"); });
+document.getElementById("btngeen").addEventListener("click", function(){ pushAnwerUserInArray("none"); });
+document.getElementById("overslaan").addEventListener("click", skip);
+
+
 
 // set new object at every party for the count
 for(var i = 0; i < parties.length; i++) {
   parties[i].count = 0;
 }
+// sets new object to the subjects for the users anwers
 for(var i = 0; i < subjects.length; i++) {
-  subjects[i].userOpionion = "";
+  subjects[i].userOpinion = "";
   subjects[i].weight = 0;
 }
 
-// start
-function Start() {
-  for (var x = 0; x < item1.length; x++) {
-    item1[x].style.display = "none";
-  }
-  count = 0;
-  SetHTMLKiesWijzer();
-}
 /**
  * sets first statement
  */
-function SetHTMLKiesWijzer() {
+function setHTMLKiesWijzer() {
+  item1[0].classList.add("d-none");
   item2[0].classList.remove("d-none");
   item2[0].classList.add("d-block");
   title.innerHTML = number + ". " + subjects[count].title;
   statement.innerHTML = subjects[count].statement;
-  PartiesOpinions(count);
+  partiesOpinions(count);
 }
 
 /**
  * sets nexts statement and if the user goes back the button of the previous statement is blue
- * @param count 
+ * @param {number} count the count of the subject 
  */
-function SetNextStatement(count) {
+function setNextStatement(count) {
+  // if it's the last question, you can choose the parties you want to see the result from
+  if (subjects[count] == undefined) {
+    chooseParties();
+    return;
+  }
+  partiesOpinions(count);
+  number = count+1;
+  title.innerHTML = number + ". " + subjects[count].title;
+  statement.innerHTML = subjects[count].statement;
+}
+
+function goBackQuestion(count){
+  //removes 1 count from the count from the parties from that subject
+  for (var i = 0; i < subjects[count].parties.length; i++){
+    for(var j = 0; j < answers.length; j++) {
+      if (subjects[count].parties[i].position == answers[j].position){
+        for(var x = 0; x < parties.length; x++){
+          if (subjects[count].parties[i].name == parties[x].name)
+          if (parties[x].count != 0){
+            parties[x].count--;
+          } 
+        }
+      }
+    }
+  }
+
   for(var i = 0; i < answers.length; i++) {
     if (answers[i].count == count) {
       switch(answers[i].position) {
@@ -79,39 +106,34 @@ function SetNextStatement(count) {
       btnNone.backgroundColor = "lightgrey";
     }
   }
-  // if it's the last question, you can choose the parties you want to see the result from
-  if (subjects[count] == undefined) {
-    ChooseParties();
-    return;
-  }
-  PartiesOpinions(count);
-  number = count+1;
-  title.innerHTML = number + ". " + subjects[count].title;
-  statement.innerHTML = subjects[count].statement;
+  setNextStatement(count);
 }
 
 
 /**
  * pushes the answers from the user in an array
- * @param {string} position 
+ * @param {string} position contra, pro or none
  */
-function PushInArray(position) {
+function pushAnwerUserInArray(position) {
   var exists = false;
-  subjects[count].userOpionion = position;
+  //at every subject the users opinion will be set
+  subjects[count].userOpinion = position;
 
+  //if users checks for higher weight for the subject, the weight count for that subject will be set to 1
   if (subjects[count].weight == 0 && questionWeight.checked) {
     subjects[count].weight++;
     subjectsLenght++;
   }
+  //if the weight is already 1 (so user goes back) and the checkbox is unchecked, the subject weight will be 0
   else if (subjects[count].weight == 1 && questionWeight.checked == false) {
     subjects[count].weight--;
-    subjectsLenght++;
+    subjectsLenght--;
   }
-
+  
   for (var x = 0; x < subjects[count].parties.length; x++) {
-    if (subjects[count].parties[x].position == position) {
-      arrAnswer.push(subjects[count].parties[x].name);
 
+    if (subjects[count].parties[x].position == position) {
+      
       for(i = 0; i < parties.length; i++) {
         if (subjects[count].parties[x].name == parties[i].name) {
           parties[i].count++;
@@ -122,6 +144,7 @@ function PushInArray(position) {
       }
     }
   }
+  
   for (var i = 0; i < answers.length; i++) {
     if (answers[i].count == count) {
       exists = true;
@@ -131,19 +154,19 @@ function PushInArray(position) {
   if(!exists) answers.push({"count": count, "position": position, "clicked": "lightblue"});
   questionWeight.checked = false;
   count++;
-  SetNextStatement(count);
+  setNextStatement(count);
 }
 /**
  * function to skip the question
  */
-function Skip() {
+function skip() {
   count++;
-  SetNextStatement(count);
+  setNextStatement(count);
 }
 /**
  * function for the go back button
  */
-function GoBack() {
+function goBack() {
   count--;
   if (count == -1) {
     if (confirm("Weet je zeker dat je terug wilt gaan?")) {
@@ -152,13 +175,14 @@ function GoBack() {
       count++;
     }
   }
-  SetNextStatement(count);
+  goBackQuestion(count);
+ 
 }
 
 /**
  * shows all the parties and checkboxes the user can check to determine which party they want with the results
  */
-function ChooseParties() {
+function chooseParties() {
   item2[0].classList.add("d-none");
   item2[0].classList.remove("d-block");
   item3[0].classList.remove("d-none");
@@ -176,19 +200,18 @@ function ChooseParties() {
     form.appendChild(label);
     form.appendChild(document.createElement("br"));
   }
-  selectBigParties.addEventListener("click", function() {CheckParties(clicked = true)});
-  selectSecularParties.addEventListener("click", function() {CheckParties(clicked = false)});
+  selectBigParties.addEventListener("click", function() {checkParties(clicked = true)});
+  selectSecularParties.addEventListener("click", function() {checkParties(clicked = false)});
   form.appendChild(document.createElement("br"));
   var btn = document.getElementById("submitbtn");
-  btn.addEventListener("click", function() {IsChecked(form)});
+  btn.addEventListener("click", function() {isChecked(form)});
 }
 
 /**
  * function checks which checkboxes the user want to check and checks the checkboxes
- * @param {*} clicked 
- * @param {*} form 
+ * @param {boolean} clicked true or false with checkbox is checked
  */
-function CheckParties(clicked) {
+function checkParties(clicked) {
   var inputs = form.getElementsByTagName("input");
   // If the user wants the big parties check, check which parties are big and check the checkbox.
   if (selectBigParties.checked && clicked) {
@@ -231,38 +254,45 @@ function CheckParties(clicked) {
 
 /**
  * push the parties in an array the user want to see the result of
- * @param {*} form 
+ * @param {HTMLElement} form 
  */
-function IsChecked(form) {
-  var arr = [];
+function isChecked(form) {
+  var showPartiesArray = [];
   var inputs = form.getElementsByTagName("input");
   for (var i = 0; i < inputs.length; i++) {
     if (inputs[i].type === "checkbox" && inputs[i].checked) {
-        arr.push(parties[i].name);
+        showPartiesArray.push(parties[i].name);
     }
   }
   item2[0].classList.add("d-none");
   item2[0].classList.remove("d-block");
-  // ViewResult(arr);
-  CalculateResult(arr);
+  calculateResult(showPartiesArray);
 }
 
-function CalculateResult(arr) {
+/**
+ * 
+ * @param {Array} showPartiesArray array with parties user wants to see
+ */
+function calculateResult(showPartiesArray) {
   var resultArray = [];
   var countArray = [];
   var current = null;
   var cnt = 0;
   for(var i = 0; i < subjects.length; i++) {
     for(var x = 0; x < subjects[i].parties.length; x++) {
-      if (subjects[i].userOpionion == subjects[i].parties[x].position) {
+      //if the users opinion is the same as a party, the party name is pushed in the resultarray
+      if (subjects[i].userOpinion == subjects[i].parties[x].position) {
         resultArray.push(subjects[i].parties[x].name);
+        //if the weight on the subject is 1, the pary names will be pushed again in the resultarry
         if (subjects[i].weight == 1) {
           resultArray.push(subjects[i].parties[x].name);
         }
       }
     }
   }
+  // sorts the array on alphabetical irder
   resultArray.sort(Compare);
+  // counts the number of same party names in the resultarray
   for (var i = 0; i < resultArray.length; i++) {
     if (resultArray[i] != current) {
       if (cnt > 0) {
@@ -272,35 +302,42 @@ function CalculateResult(arr) {
       cnt = 1;
     } else {
       cnt++;
-      countArray.count = cnt;
+      for (var x = 0; x < countArray.length; x++)
+      {
+        if (countArray.party == current)
+        {
+          countArray[x].count = cnt;
+        }
+      }
     }
   }
   if (cnt > 0) {
     countArray.push({"party": current, "count": cnt});
   }
-  ViewResult(countArray, arr);
+  viewResult(countArray, showPartiesArray);
 }
 
 /**
  * Calculates and shows result on screen
- * @param arr array with checked parties
+ * @param {Array} countArray array with the party and the times the user agreed with this parties
+ * @param {Array} showPartiesArray array with checked parties
  */
-function ViewResult(resultArray, arr) {
+function viewResult(countArray, showPartiesArray) {
   item3[0].classList.add("d-none");
   item3[0].classList.remove("d-block");
   item4[0].classList.remove("d-none");
   item4[0].classList.add("d-block");
 
-  
   // calculate percentage of parties with answers of user
-  for (var x = 0; x < resultArray.length; x++) {
-    resultArray[x].count = resultArray[x].count / subjectsLenght * 100;
+  for (var x = 0; x < countArray.length; x++) {
+    countArray[x].count = countArray[x].count / subjectsLenght * 100;
   }
-  var sorted = resultArray.sort(Compare1);
+
+  var sorted = countArray.sort(Compare1);
   // show result from the parties that are checked
-  for (var i = 0; i < arr.length; i++) {
+  for (var i = 0; i < showPartiesArray.length; i++) {
     for (var x = 0; x < sorted.length; x++) {
-      if (sorted[x].party == arr[i]) {
+      if (sorted[x].party == showPartiesArray[i]) {
         var para = document.createElement("p");
         para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
         result[0].appendChild(para);
@@ -308,7 +345,7 @@ function ViewResult(resultArray, arr) {
     }
   }
   // if none of the parties are checked, show all parties
-  if (arr.length == 0) {
+  if (showPartiesArray.length == 0) {
     for (var x = 0; x < sorted.length; x++) {
       var para = document.createElement("p");
       para.innerHTML = sorted[x].party + " ----- " + sorted[x].count.toFixed() + "%";
@@ -318,8 +355,8 @@ function ViewResult(resultArray, arr) {
 }
 /**
  * sort array on alphabetical order
- * @param {*} a 
- * @param {*} b 
+ * @param {Array} a 
+ * @param {Array} b 
  */
 function Compare(a, b) {
   if ( a < b ) {
@@ -332,8 +369,8 @@ function Compare(a, b) {
 }
 /**
  * sort array on count
- * @param {*} a 
- * @param {*} b 
+ * @param {Array} a 
+ * @param {Array} b 
  */
 function Compare1(a, b) {
   if ( a.count < b.count ) {
@@ -346,9 +383,9 @@ function Compare1(a, b) {
 }
 /**
  * add all the parties with their opinion of the current statement
- * @param count 
+ * @param {number} count count of the current subject
  */
-function PartiesOpinions(count) {
+function partiesOpinions(count) {
   var eensrow = document.getElementById("eensrow");
   var oneensrow = document.getElementById("oneensrow");
   var geenrow = document.getElementById("geenrow");

@@ -18,7 +18,7 @@
                         <p>De StemWijzer maakt geen gebruik van cookies. Klik hier voor de volledige privacy statement</p>
                     </div>
                     <div class = "col-sm text-center">
-                        <button class ="btn btn-info btn-lg" style="width: 200px;" onclick="Start()">Start</button>
+                        <button id="btnsetkieswijzer" class ="btn btn-info btn-lg" style="width: 200px;">Start</button>
                     </div>
                 </div>
             </div>
@@ -26,7 +26,7 @@
             <div class="w-100 card m-3 p-3 d-none item2">
                 <div class="row text-left">
                     <div class = "col-sm">
-                        <button class ="btn btn-secondary btn-lg" onclick="GoBack()"><i class="fas fa-arrow-left"></i></button>
+                        <button id="btngoback" class ="btn btn-secondary btn-lg"><i class="fas fa-arrow-left"></i></button>
                     </div>
                 </div>
                 <div class = "row">
@@ -36,11 +36,11 @@
                     <h4 id = "statement"></h4>
                 </div>
                 <div class = "row">
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btneens" onclick="PushInArray('pro')">Eens</button>
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btngeen" onclick="PushInArray('none')">Geen van beide</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btneens">Eens</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btngeen">Geen van beide</button>
 
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btnoneens" onclick="PushInArray('contra')">Oneens</button>
-                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "overslaan" onclick="Skip()">Sla deze vraag over</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "btnoneens">Oneens</button>
+                    <button class ="btn btn-lg m-1" style="width: 200px;" id = "overslaan">Sla deze vraag over</button>
                 </div>
                 <div class = "row mt-1">
                     <input type="checkbox" class="form-check-input" id="questionWeight"> 
@@ -92,7 +92,7 @@
         </div>
     </div>
     </body>
-    <script src="http://stemwijzer.dvc-icta.nl/data.js"></script>
+    <script src="http://stemwijzer.dvc-icta.nl/testdata.js"></script>
     <script src="js/script.js"></script>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
